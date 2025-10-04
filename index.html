@@ -384,19 +384,6 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
-                    </svg>
-                    Battery
-                </label>
-                <select id="battery">
-                    <option value="stk">Stock Battery (-stk)</option>
-                    <option value="ext">Extended Battery (-ext)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label class="form-label">ROM Type</label>
                 <select id="dtbo">
                     <option value="aosp">AOSP ROM</option>
@@ -409,24 +396,24 @@
             <div class="form-group">
                 <label class="form-label">CPU Optimization</label>
                 <select id="cpu">
-                    <option>Default</option>
-                    <option>Performance</option>
-                    <option>Battery Saver</option>
+                    <option value="balance">Balance</option>
+                    <option value="efficient">Efficient</option>
+                    <option value="max">Max</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label class="form-label">GPU Optimization</label>
                 <select id="gpu">
-                    <option>Default</option>
-                    <option>Performance</option>
-                    <option>Battery Saver</option>
+                    <option value="uv">UV</option>
+                    <option value="ocuv">OCUV</option>
+                    <option value="stock">STOCK</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label class="checkbox-group">
-                    <input type="checkbox" id="sideload" checked>
+                    <input type="checkbox" id="sideload">
                     <span>Sideload Support</span>
                 </label>
             </div>
@@ -435,7 +422,7 @@
                 <div class="file-button" id="recommendedFileCard">
                     <div>
                         <div style="font-size: 0.85em; color: #6366f1; margin-bottom: 5px;">📥 Recommended File:</div>
-                        <span id="outputFile1">FX-stk.zip</span>
+                        <span id="outputFile1">FX.zip</span>
                     </div>
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -444,7 +431,7 @@
                 <div class="file-button">
                     <div>
                         <div style="font-size: 0.85em; color: #888; margin-bottom: 5px;">✏️ Rename to:</div>
-                        <span id="outputFile2">stk-aosp.fusionx</span>
+                        <span id="outputFile2">aosp.fusionx</span>
                     </div>
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -518,7 +505,6 @@
 
     <script>
         const ksu = document.getElementById('ksu');
-        const battery = document.getElementById('battery');
         const dtbo = document.getElementById('dtbo');
         const cpu = document.getElementById('cpu');
         const gpu = document.getElementById('gpu');
@@ -537,7 +523,6 @@
         function loadSavedConfig() {
             const config = {
                 ksu: localStorage.getItem('fusionx_ksu'),
-                battery: localStorage.getItem('fusionx_battery'),
                 dtbo: localStorage.getItem('fusionx_dtbo'),
                 cpu: localStorage.getItem('fusionx_cpu'),
                 gpu: localStorage.getItem('fusionx_gpu'),
@@ -547,7 +532,6 @@
             };
 
             if (config.ksu) ksu.value = config.ksu;
-            if (config.battery) battery.value = config.battery;
             if (config.dtbo) dtbo.value = config.dtbo;
             if (config.cpu) cpu.value = config.cpu;
             if (config.gpu) gpu.value = config.gpu;
@@ -565,43 +549,58 @@
         }
 
         function updateOutputFiles() {
-            const batteryCode = battery.value;
             const dtboCode = dtbo.value;
             const ksuVariant = ksu.value;
+            const cpuOpt = cpu.value;
+            const gpuOpt = gpu.value;
+            const isSideload = sideload.checked;
             
-            let recommendedFile = '';
+            let recommendedFile = 'FX';
             let renameFile = '';
             let recommendation = '';
             
-            // Determine recommended file based on KSU variant
+            // Add KSU variant to filename
             if (ksuVariant === 'non-ksu') {
-                recommendedFile = `FX-${batteryCode}-NonKSU.zip`;
+                recommendedFile += '-NonKSU';
                 recommendation = `<strong>Non-KSU Selected:</strong> Only showing Non-KSU files. This version does not include Kernel SU support.`;
             } else if (ksuVariant === 'next') {
-                recommendedFile = `FX-${batteryCode}-NEXT.zip`;
+                recommendedFile += '-NEXT';
                 recommendation = `<strong>NEXT Selected:</strong> Only showing NEXT files. This is the next-generation KSU variant.`;
             } else if (ksuVariant === 'susfs') {
-                recommendedFile = `FX-${batteryCode}-SUSFS.zip`;
+                recommendedFile += '-SUSFS';
                 recommendation = `<strong>SUSFS Selected:</strong> Only showing SUSFS files. This includes SUSFS (Samsung Universal Storage File System) support.`;
             } else {
-                recommendedFile = `FX-${batteryCode}-KSU.zip`;
+                recommendedFile += '-KSU';
                 recommendation = `<strong>KSU Selected:</strong> Only showing standard KSU (Kernel SU) files.`;
             }
             
+            // Add CPU optimization (always lowercase)
+            recommendedFile += `-${cpuOpt.toLowerCase()}`;
+            
+            // Add GPU optimization (always lowercase)
+            recommendedFile += `-${gpuOpt.toLowerCase()}`;
+            
+            // Add sideload if checked (always lowercase)
+            if (isSideload) {
+                recommendedFile += '-sideload';
+            }
+            
+            recommendedFile += '.zip';
+            
             // Determine rename and ROM-specific recommendations
             if (dtboCode === 'aosp') {
-                renameFile = `${batteryCode}-aosp.fusionx`;
+                renameFile = `aosp.fusionx`;
                 recommendation += `<br><br><strong>AOSP ROM:</strong> Only showing AOSP-compatible files (no BPF/OPLUS). After downloading, rename the file to include "aosp" for easy identification.`;
             } else if (dtboCode === 'miui') {
-                renameFile = `${batteryCode}-miui.fusionx`;
+                renameFile = `miui.fusionx`;
                 recommendation += `<br><br><strong>MIUI ROM:</strong> Only showing MIUI-compatible files (no BPF/OPLUS). After downloading, rename the file to include "miui" for MIUI-specific compatibility.`;
             } else if (dtboCode === 'hos-a16') {
-                recommendedFile = `FX-${batteryCode}-BPF.zip`;
-                renameFile = `${batteryCode}-hos-a16.fusionx`;
+                recommendedFile = 'FX-BPF.zip';
+                renameFile = `hos-a16.fusionx`;
                 recommendation = `<strong>HOS A16/GSI Selected:</strong> Only showing <strong>BPF files</strong>. This version is specifically built for HyperOS Android 16 and GSI ROMs.<br><br>Look for files containing "BPF" - do not rename, use the BPF file directly.`;
             } else if (dtboCode === 'oplus') {
-                recommendedFile = `FX-${batteryCode}-OPLUS.zip`;
-                renameFile = `${batteryCode}-oplus.fusionx`;
+                recommendedFile = 'FX-OPLUS.zip';
+                renameFile = `oplus.fusionx`;
                 recommendation = `<strong>OPLUS ROM Selected:</strong> Only showing <strong>OPLUS files</strong>. This version is optimized for OPlus/Realme/OnePlus devices.<br><br>Look for files containing "OPLUS" in the release list below.`;
             }
             
@@ -611,7 +610,6 @@
             
             // Save configuration
             localStorage.setItem('fusionx_ksu', ksu.value);
-            localStorage.setItem('fusionx_battery', battery.value);
             localStorage.setItem('fusionx_dtbo', dtbo.value);
             localStorage.setItem('fusionx_cpu', cpu.value);
             localStorage.setItem('fusionx_gpu', gpu.value);
@@ -841,7 +839,6 @@
 
         // Event listeners
         ksu.addEventListener('change', updateOutputFiles);
-        battery.addEventListener('change', updateOutputFiles);
         dtbo.addEventListener('change', updateOutputFiles);
         cpu.addEventListener('change', updateOutputFiles);
         gpu.addEventListener('change', updateOutputFiles);
