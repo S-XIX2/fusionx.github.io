@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FusionX - Kernel Downloader</title>
+    <title>FusionX Downloader</title>
     <style>
         * {
             margin: 0;
@@ -11,166 +11,76 @@
             box-sizing: border-box;
         }
 
-        @keyframes gradient-shift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); }
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #0f0c29);
-            background-size: 400% 400%;
-            animation: gradient-shift 15s ease infinite;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #000;
             color: #fff;
-            min-height: 100vh;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 700px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .logo {
-            font-size: 4em;
-            font-weight: 900;
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        h1 {
+            font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 0 0 80px rgba(139, 92, 246, 0.5);
-            letter-spacing: -2px;
+            font-weight: 600;
         }
 
-        .tagline {
-            font-size: 1.3em;
-            color: #a78bfa;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        .subtitle {
+            color: #888;
+            font-size: 1.1em;
+            margin-bottom: 30px;
         }
 
-        .nav-links {
+        .links {
             display: flex;
-            gap: 30px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .nav-links a {
-            color: #a78bfa;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 20px;
-            border-radius: 20px;
-            border: 2px solid rgba(167, 139, 250, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            background: rgba(167, 139, 250, 0.2);
-            border-color: #a78bfa;
-            transform: translateY(-2px);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
             gap: 30px;
             margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
-        }
-
-        .card-title {
-            font-size: 1.5em;
-            font-weight: 700;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .links a {
             color: #fff;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: opacity 0.2s;
         }
 
-        .card-title .icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            border-radius: 10px;
+        .links a:hover {
+            opacity: 0.7;
+        }
+
+        .section {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 6px;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .section-header svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .section-description {
+            color: #888;
+            margin-bottom: 25px;
+            line-height: 1.5;
         }
 
         .form-group {
@@ -178,424 +88,420 @@
         }
 
         .form-label {
-            display: block;
-            font-size: 0.9em;
-            color: #a78bfa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             margin-bottom: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 0.95em;
         }
 
-        select, input[type="text"] {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 2px solid rgba(139, 92, 246, 0.3);
-            border-radius: 12px;
-            padding: 14px 18px;
-            color: #fff;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        select:hover, input[type="text"]:hover {
-            border-color: rgba(139, 92, 246, 0.6);
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        select:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        .form-label svg {
+            width: 18px;
+            height: 18px;
         }
 
         select {
+            width: 100%;
+            background: #2a2a2a;
+            color: #fff;
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: border-color 0.2s;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23a78bfa' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 15px center;
-            padding-right: 45px;
+            padding-right: 40px;
         }
 
-        .checkbox-container {
+        select:hover {
+            border-color: #4a4a4a;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
+            gap: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            user-select: none;
         }
 
-        .checkbox-container:hover {
-            background: rgba(139, 92, 246, 0.1);
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-
-        .checkbox-container input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            accent-color: #8b5cf6;
+            accent-color: #6366f1;
         }
 
-        .output-display {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
-            border-radius: 16px;
-            padding: 25px;
-            margin-top: 30px;
-            border: 2px solid rgba(139, 92, 246, 0.3);
+        .output-files {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .output-title {
-            font-size: 0.85em;
-            color: #a78bfa;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .output-file {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 16px;
+        .file-button {
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
             border-radius: 10px;
-            margin-bottom: 10px;
-            font-family: 'Courier New', monospace;
+            padding: 15px 20px;
             color: #fff;
-            font-size: 1.05em;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            color: white;
-            border: none;
-            padding: 16px 36px;
-            border-radius: 12px;
-            font-size: 1.05em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .releases-section {
-            margin-top: 50px;
-        }
-
-        .release-item {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1em;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .release-item:hover {
-            transform: translateX(10px);
-            border-color: rgba(139, 92, 246, 0.5);
-            background: rgba(139, 92, 246, 0.1);
-        }
-
-        .release-info {
-            flex: 1;
-        }
-
-        .release-version {
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-
-        .release-filename {
-            color: #a78bfa;
-            font-size: 0.95em;
-            font-family: 'Courier New', monospace;
-        }
-
-        .badge {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-left: 12px;
-            animation: glow 2s ease-in-out infinite;
-        }
-
-        .download-btn {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
+            transition: all 0.2s;
             cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
+        }
+
+        .file-button:hover {
+            background: #3a3a3a;
+            border-color: #4a4a4a;
+        }
+
+        .file-button svg {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+        }
+
+        .version-section {
+            margin-bottom: 30px;
+        }
+
+        .version-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .version-header svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .version-title {
+            font-size: 1.3em;
             font-weight: 600;
         }
 
+        .version-description {
+            color: #888;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .version-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .version-item {
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            border-radius: 12px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .version-item:hover {
+            border-color: #4a4a4a;
+            background: #333;
+        }
+
+        .version-info {
+            flex: 1;
+        }
+
+        .version-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .version-file {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            background: #6366f1;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .download-btn {
+            background: #6366f1;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
         .download-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+            background: #5558e3;
+            transform: translateY(-2px);
+        }
+
+        .download-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .download-btn svg {
+            width: 20px;
+            height: 20px;
         }
 
         .loading {
             text-align: center;
-            padding: 60px 20px;
-            color: #a78bfa;
-            font-size: 1.1em;
-        }
-
-        .loading::before {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(139, 92, 246, 0.2);
-            border-top-color: #8b5cf6;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            color: #888;
+            padding: 20px;
         }
 
         .error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 2px solid rgba(239, 68, 68, 0.5);
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 30px;
-            color: #fca5a5;
-        }
-
-        .info-card {
-            background: rgba(59, 130, 246, 0.1);
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 40px;
-        }
-
-        .info-card h3 {
-            color: #60a5fa;
+            background: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            font-size: 1.4em;
         }
 
-        .info-card ol {
-            color: #ddd;
-            line-height: 2;
-            padding-left: 20px;
-        }
-
-        .info-card li {
+        .config-input {
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: #fff;
+            width: 100%;
+            font-size: 1em;
             margin-bottom: 15px;
         }
 
-        .info-card strong {
-            color: #fff;
+        .config-input:focus {
+            outline: none;
+            border-color: #6366f1;
         }
 
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(139, 92, 246, 0.5);
-            border-radius: 50%;
-            animation: particle-float 20s infinite;
+        .btn-primary:hover {
+            background: #5558e3;
         }
 
-        @keyframes particle-float {
-            0%, 100% {
-                transform: translateY(0) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(100px);
-                opacity: 0;
-            }
+        .info-box {
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .info-box h3 {
+            margin-bottom: 10px;
+            color: #6366f1;
+        }
+
+        .info-box code {
+            background: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .info-box pre {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
     <div class="container">
-        <div class="header">
-            <div class="logo">FUSIONX</div>
-            <div class="tagline">Next-Gen Kernel Distribution</div>
-            <div class="nav-links">
-                <a href="https://github.com/S-XIX2/fusionx.github.io" target="_blank">GitHub</a>
-                <a href="#" id="telegramLink">Telegram</a>
-            </div>
+        <h1>FusionX Downloader</h1>
+        <p class="subtitle">Download custom kernel variants for your device</p>
+
+        <div class="links">
+            <a href="#" id="githubLink">GitHub</a>
+            <a href="#" id="telegramLink">Telegram</a>
         </div>
 
         <div id="errorMessage" style="display: none;" class="error"></div>
 
-        <div class="grid">
-            <div class="card">
-                <div class="card-title">
-                    <div class="icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        </svg>
-                    </div>
-                    Configuration
-                </div>
+        <div class="section">
+            <div class="section-header">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span class="section-title">Kernel Configuration</span>
+            </div>
+            <p class="section-description">Configure the kernel to your needs. It's auto-saved.</p>
 
-                <div class="form-group">
-                    <label class="form-label">KSU Variant</label>
-                    <select id="ksu">
-                        <option>KSU</option>
-                        <option>Non-KSU</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Battery Mode</label>
-                    <select id="battery">
-                        <option>Stock Battery (-stk)</option>
-                        <option>Extended Battery (-ext)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">DTBO Type</label>
-                    <select id="dtbo">
-                        <option>AOSP ROM (default)</option>
-                        <option>MIUI ROM</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">CPU Profile</label>
-                    <select id="cpu">
-                        <option>Default</option>
-                        <option>Performance</option>
-                        <option>Battery Saver</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">GPU Profile</label>
-                    <select id="gpu">
-                        <option>Default</option>
-                        <option>Performance</option>
-                        <option>Battery Saver</option>
-                    </select>
-                </div>
-
-                <label class="checkbox-container">
-                    <input type="checkbox" id="sideload" checked>
-                    <span>Enable Sideload Support</span>
+            <div class="form-group">
+                <label class="form-label">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    KSU Variant
                 </label>
+                <select id="ksu">
+                    <option>KSU</option>
+                    <option>Non-KSU</option>
+                </select>
+            </div>
 
-                <div class="output-display">
-                    <div class="output-title">Generated Filenames</div>
-                    <div class="output-file" id="outputFile1">FX-stk.zip</div>
-                    <div class="output-file" id="outputFile2">stk-aosp.fusionx</div>
+            <div class="form-group">
+                <label class="form-label">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                    </svg>
+                    Battery
+                </label>
+                <select id="battery">
+                    <option>Stock Battery (-stk)</option>
+                    <option>Extended Battery (-ext)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">DTBO</label>
+                <select id="dtbo">
+                    <option>AOSP ROM (default)</option>
+                    <option>MIUI ROM</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">CPU Optimization</label>
+                <select id="cpu">
+                    <option>Default</option>
+                    <option>Performance</option>
+                    <option>Battery Saver</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">GPU Optimization</label>
+                <select id="gpu">
+                    <option>Default</option>
+                    <option>Performance</option>
+                    <option>Battery Saver</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-group">
+                    <input type="checkbox" id="sideload" checked>
+                    <span>Sideload Support</span>
+                </label>
+            </div>
+
+            <div class="output-files">
+                <div class="file-button">
+                    <span id="outputFile1">FX-stk.zip</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
                 </div>
+                <div class="file-button">
+                    <span id="outputFile2">stk-aosp.fusionx</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>⚙️ Setup GitHub Repository</h3>
+                <p style="margin-bottom: 10px;">Enter your GitHub repository details:</p>
+                <input type="text" id="repoOwner" class="config-input" placeholder="GitHub Username (e.g., yourusername)">
+                <input type="text" id="repoName" class="config-input" placeholder="Repository Name (e.g., fusionx-releases)">
+                <button class="btn-primary" onclick="saveRepoConfig()">Save Configuration</button>
             </div>
         </div>
 
-        <div class="releases-section">
-            <div class="card">
-                <div class="card-title">
-                    <div class="icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                        </svg>
-                    </div>
-                    Available Releases
+        <div class="section">
+            <div class="version-section">
+                <div class="version-header">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                    </svg>
+                    <span class="version-title">Latest Version</span>
                 </div>
+                <p class="version-description">Files will be automatically renamed to match your configuration when downloaded.</p>
 
                 <div id="loadingMessage" class="loading">
-                    Loading releases from GitHub...
+                    <p>Configure your GitHub repository above to load releases...</p>
                 </div>
 
-                <div id="versionList"></div>
+                <div class="version-list" id="versionList">
+                    <!-- Versions will be loaded here dynamically -->
+                </div>
             </div>
         </div>
 
-        <div class="info-card">
-            <h3>📚 How to Use</h3>
-            <ol>
-                <li>
-                    <strong>Select Your Configuration:</strong><br>
-                    Choose your preferred KSU variant, battery mode, DTBO type, and performance profiles
+        <div class="section info-box">
+            <h3>📖 How to Set Up</h3>
+            <ol style="line-height: 2; color: #ccc;">
+                <li><strong>Create a GitHub Repository:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Go to <a href="https://github.com/new" target="_blank" style="color: #6366f1;">github.com/new</a></li>
+                        <li>Create a repository (e.g., "fusionx-releases")</li>
+                        <li>Make it public</li>
+                    </ul>
                 </li>
-                <li>
-                    <strong>Review Generated Filenames:</strong><br>
-                    Check the output display to see what your custom build will be named
+                <li style="margin-top: 15px;"><strong>Upload Your Files as Releases:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Go to your repository</li>
+                        <li>Click "Releases" → "Create a new release"</li>
+                        <li>Add a tag (e.g., "v1.0")</li>
+                        <li>Upload your ZIP files</li>
+                        <li>Publish the release</li>
+                    </ul>
                 </li>
-                <li>
-                    <strong>Download Your Build:</strong><br>
-                    Scroll down to the releases section and click download on your preferred version
-                </li>
-                <li>
-                    <strong>Flash & Enjoy:</strong><br>
-                    Flash the downloaded kernel via recovery or fastboot and experience FusionX!
+                <li style="margin-top: 15px;"><strong>Enter Repository Info:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Fill in your GitHub username and repository name above</li>
+                        <li>Click "Save Configuration"</li>
+                        <li>Your releases will appear automatically!</li>
+                    </ul>
                 </li>
             </ol>
         </div>
     </div>
 
     <script>
-        // Create floating particles
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 50; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-            particlesContainer.appendChild(particle);
-        }
-
         const ksu = document.getElementById('ksu');
         const battery = document.getElementById('battery');
         const dtbo = document.getElementById('dtbo');
@@ -607,11 +513,12 @@
         const versionList = document.getElementById('versionList');
         const loadingMessage = document.getElementById('loadingMessage');
         const errorMessage = document.getElementById('errorMessage');
+        const repoOwner = document.getElementById('repoOwner');
+        const repoName = document.getElementById('repoName');
+        const githubLink = document.getElementById('githubLink');
+        const telegramLink = document.getElementById('telegramLink');
 
-        // Repository hardcoded
-        const REPO_OWNER = 'S-XIX2';
-        const REPO_NAME = 'fusionx.github.io';
-
+        // Load saved configuration
         function loadSavedConfig() {
             const config = {
                 ksu: localStorage.getItem('fusionx_ksu'),
@@ -619,7 +526,9 @@
                 dtbo: localStorage.getItem('fusionx_dtbo'),
                 cpu: localStorage.getItem('fusionx_cpu'),
                 gpu: localStorage.getItem('fusionx_gpu'),
-                sideload: localStorage.getItem('fusionx_sideload')
+                sideload: localStorage.getItem('fusionx_sideload'),
+                repoOwner: localStorage.getItem('fusionx_repo_owner'),
+                repoName: localStorage.getItem('fusionx_repo_name')
             };
 
             if (config.ksu) ksu.value = config.ksu;
@@ -628,11 +537,16 @@
             if (config.cpu) cpu.value = config.cpu;
             if (config.gpu) gpu.value = config.gpu;
             if (config.sideload !== null) sideload.checked = config.sideload === 'true';
+            if (config.repoOwner) repoOwner.value = config.repoOwner;
+            if (config.repoName) repoName.value = config.repoName;
 
             updateOutputFiles();
             
-            // Auto-fetch releases on load
-            fetchReleases(REPO_OWNER, REPO_NAME);
+            // Load releases if repo is configured
+            if (config.repoOwner && config.repoName) {
+                updateGitHubLink(config.repoOwner, config.repoName);
+                fetchReleases(config.repoOwner, config.repoName);
+            }
         }
 
         function updateOutputFiles() {
@@ -642,6 +556,7 @@
             outputFile1.textContent = `FX-${batteryCode}.zip`;
             outputFile2.textContent = `${batteryCode}-${dtboCode}.fusionx`;
             
+            // Save configuration
             localStorage.setItem('fusionx_ksu', ksu.value);
             localStorage.setItem('fusionx_battery', battery.value);
             localStorage.setItem('fusionx_dtbo', dtbo.value);
@@ -650,9 +565,30 @@
             localStorage.setItem('fusionx_sideload', sideload.checked);
         }
 
+        function saveRepoConfig() {
+            const owner = repoOwner.value.trim();
+            const name = repoName.value.trim();
+
+            if (!owner || !name) {
+                showError('Please enter both GitHub username and repository name');
+                return;
+            }
+
+            localStorage.setItem('fusionx_repo_owner', owner);
+            localStorage.setItem('fusionx_repo_name', name);
+
+            updateGitHubLink(owner, name);
+            fetchReleases(owner, name);
+            hideError();
+        }
+
+        function updateGitHubLink(owner, name) {
+            githubLink.href = `https://github.com/${owner}/${name}`;
+        }
+
         async function fetchReleases(owner, repo) {
             loadingMessage.style.display = 'block';
-            loadingMessage.innerHTML = '<div>Loading releases...</div>';
+            loadingMessage.textContent = 'Loading releases...';
             versionList.innerHTML = '';
             hideError();
 
@@ -660,13 +596,13 @@
                 const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases`);
                 
                 if (!response.ok) {
-                    throw new Error(`Repository not found. Please check your username and repository name.`);
+                    throw new Error(`Repository not found or is private. Please check your username and repository name.`);
                 }
 
                 const releases = await response.json();
                 
                 if (releases.length === 0) {
-                    loadingMessage.innerHTML = '<div>No releases found yet. Check back soon!</div>';
+                    loadingMessage.textContent = 'No releases found. Create a release in your repository to see it here.';
                     return;
                 }
 
@@ -685,27 +621,55 @@
                 if (release.assets.length === 0) return;
 
                 release.assets.forEach(asset => {
-                    const item = document.createElement('div');
-                    item.className = 'release-item';
-                    
-                    item.innerHTML = `
-                        <div class="release-info">
-                            <div class="release-version">
-                                ${release.tag_name}
-                                ${index === 0 ? '<span class="badge">Latest</span>' : ''}
-                            </div>
-                            <div class="release-filename">${asset.name}</div>
-                        </div>
-                        <button class="download-btn" onclick="downloadFile('${asset.browser_download_url}', '${asset.name}')">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                            </svg>
-                        </button>
-                    `;
-                    
-                    versionList.appendChild(item);
+                    const versionItem = createVersionItem(
+                        release.tag_name,
+                        asset.name,
+                        asset.browser_download_url,
+                        index === 0 // First release gets a badge
+                    );
+                    versionList.appendChild(versionItem);
                 });
             });
+        }
+
+        function createVersionItem(version, filename, downloadUrl, isLatest) {
+            const item = document.createElement('div');
+            item.className = 'version-item';
+
+            const info = document.createElement('div');
+            info.className = 'version-info';
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'version-name';
+            nameDiv.textContent = version;
+            
+            if (isLatest) {
+                const badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.textContent = 'Latest';
+                nameDiv.appendChild(badge);
+            }
+
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'version-file';
+            fileDiv.textContent = filename;
+
+            info.appendChild(nameDiv);
+            info.appendChild(fileDiv);
+
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'download-btn';
+            downloadBtn.innerHTML = `
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+            `;
+            downloadBtn.onclick = () => downloadFile(downloadUrl, filename);
+
+            item.appendChild(info);
+            item.appendChild(downloadBtn);
+
+            return item;
         }
 
         function downloadFile(url, filename) {
