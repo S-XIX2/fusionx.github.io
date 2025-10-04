@@ -474,7 +474,7 @@
                     </svg>
                     <span class="version-title">Latest Version</span>
                 </div>
-                <p class="version-description">Files will be automatically renamed to match your configuration when downloaded.</p>
+                <p class="version-description">Files will be automatically filtered based on your configuration.</p>
 
                 <div id="loadingMessage" class="loading">
                     <p>Configure your GitHub repository above to load releases...</p>
@@ -576,33 +576,33 @@
             // Determine recommended file based on KSU variant
             if (ksuVariant === 'non-ksu') {
                 recommendedFile = `FX-${batteryCode}-NonKSU.zip`;
-                recommendation = `<strong>Non-KSU Selected:</strong> Download the file with "NonKSU" in the filename. This version does not include Kernel SU support.`;
+                recommendation = `<strong>Non-KSU Selected:</strong> Only showing Non-KSU files. This version does not include Kernel SU support.`;
             } else if (ksuVariant === 'next') {
                 recommendedFile = `FX-${batteryCode}-NEXT.zip`;
-                recommendation = `<strong>NEXT Selected:</strong> Download the file with "NEXT" in the filename. This is the next-generation KSU variant.`;
+                recommendation = `<strong>NEXT Selected:</strong> Only showing NEXT files. This is the next-generation KSU variant.`;
             } else if (ksuVariant === 'susfs') {
                 recommendedFile = `FX-${batteryCode}-SUSFS.zip`;
-                recommendation = `<strong>SUSFS Selected:</strong> Download the file with "SUSFS" in the filename. This includes SUSFS (Samsung Universal Storage File System) support.`;
+                recommendation = `<strong>SUSFS Selected:</strong> Only showing SUSFS files. This includes SUSFS (Samsung Universal Storage File System) support.`;
             } else {
                 recommendedFile = `FX-${batteryCode}-KSU.zip`;
-                recommendation = `<strong>KSU Selected:</strong> Download the standard KSU (Kernel SU) file.`;
+                recommendation = `<strong>KSU Selected:</strong> Only showing standard KSU (Kernel SU) files.`;
             }
             
             // Determine rename and ROM-specific recommendations
             if (dtboCode === 'aosp') {
                 renameFile = `${batteryCode}-aosp.fusionx`;
-                recommendation += `<br><br><strong>AOSP ROM:</strong> After downloading, rename the file to include "aosp" for easy identification.`;
+                recommendation += `<br><br><strong>AOSP ROM:</strong> Only showing AOSP-compatible files (no BPF/OPLUS). After downloading, rename the file to include "aosp" for easy identification.`;
             } else if (dtboCode === 'miui') {
                 renameFile = `${batteryCode}-miui.fusionx`;
-                recommendation += `<br><br><strong>MIUI ROM:</strong> After downloading, rename the file to include "miui" for MIUI-specific compatibility.`;
+                recommendation += `<br><br><strong>MIUI ROM:</strong> Only showing MIUI-compatible files (no BPF/OPLUS). After downloading, rename the file to include "miui" for MIUI-specific compatibility.`;
             } else if (dtboCode === 'hos-a16') {
                 recommendedFile = `FX-${batteryCode}-BPF.zip`;
                 renameFile = `${batteryCode}-hos-a16.fusionx`;
-                recommendation = `<strong>HOS A16/GSI Selected:</strong> Download the file with <strong>"BPF"</strong> in the filename. This version is specifically built for HyperOS Android 16 and GSI ROMs.<br><br>Look for files containing "BPF" - do not rename, use the BPF file directly.`;
+                recommendation = `<strong>HOS A16/GSI Selected:</strong> Only showing <strong>BPF files</strong>. This version is specifically built for HyperOS Android 16 and GSI ROMs.<br><br>Look for files containing "BPF" - do not rename, use the BPF file directly.`;
             } else if (dtboCode === 'oplus') {
                 recommendedFile = `FX-${batteryCode}-OPLUS.zip`;
                 renameFile = `${batteryCode}-oplus.fusionx`;
-                recommendation = `<strong>OPLUS ROM Selected:</strong> Download the file with <strong>"OPLUS"</strong> in the filename. This version is optimized for OPlus/Realme/OnePlus devices.<br><br>Look for files containing "OPLUS" in the release list below.`;
+                recommendation = `<strong>OPLUS ROM Selected:</strong> Only showing <strong>OPLUS files</strong>. This version is optimized for OPlus/Realme/OnePlus devices.<br><br>Look for files containing "OPLUS" in the release list below.`;
             }
             
             outputFile1.textContent = recommendedFile;
@@ -617,8 +617,12 @@
             localStorage.setItem('fusionx_gpu', gpu.value);
             localStorage.setItem('fusionx_sideload', sideload.checked);
             
-            // Filter and highlight matching files in version list
-            highlightMatchingFiles();
+            // Reload releases with new filter if repo is configured
+            const savedOwner = localStorage.getItem('fusionx_repo_owner');
+            const savedRepo = localStorage.getItem('fusionx_repo_name');
+            if (savedOwner && savedRepo) {
+                fetchReleases(savedOwner, savedRepo);
+            }
         }
 
         function saveRepoConfig() {
@@ -672,20 +676,60 @@
 
         function displayReleases(releases) {
             versionList.innerHTML = '';
+            const ksuVariant = ksu.value;
+            const dtboCode = dtbo.value;
 
             releases.forEach((release, index) => {
                 if (release.assets.length === 0) return;
 
                 release.assets.forEach(asset => {
-                    const versionItem = createVersionItem(
-                        release.tag_name,
-                        asset.name,
-                        asset.browser_download_url,
-                        index === 0 // First release gets a badge
-                    );
-                    versionList.appendChild(versionItem);
+                    const filename = asset.name.toLowerCase();
+                    
+                    // Filter based on KSU variant
+                    let showFile = false;
+                    
+                    // KSU variant filtering
+                    if (ksuVariant === 'non-ksu' && filename.includes('nonksu')) {
+                        showFile = true;
+                    } else if (ksuVariant === 'next' && filename.includes('next')) {
+                        showFile = true;
+                    } else if (ksuVariant === 'susfs' && filename.includes('susfs')) {
+                        showFile = true;
+                    } else if (ksuVariant === 'ksu' && filename.includes('ksu') && !filename.includes('nonksu')) {
+                        showFile = true;
+                    }
+                    
+                    // ROM type filtering - override if specific ROM type is selected
+                    if (dtboCode === 'hos-a16') {
+                        showFile = filename.includes('bpf');
+                    } else if (dtboCode === 'oplus') {
+                        showFile = filename.includes('oplus');
+                    } else if (dtboCode === 'aosp' || dtboCode === 'miui') {
+                        // For AOSP/MIUI, hide BPF and OPLUS files
+                        if (filename.includes('bpf') || filename.includes('oplus')) {
+                            showFile = false;
+                        }
+                    }
+
+                    if (showFile) {
+                        const versionItem = createVersionItem(
+                            release.tag_name,
+                            asset.name,
+                            asset.browser_download_url,
+                            index === 0 // First release gets a badge
+                        );
+                        versionList.appendChild(versionItem);
+                    }
                 });
             });
+
+            // Show message if no files match the filter
+            if (versionList.children.length === 0) {
+                loadingMessage.style.display = 'block';
+                loadingMessage.textContent = 'No files found matching your current configuration. Try changing your settings or check if the files exist in your repository.';
+            } else {
+                loadingMessage.style.display = 'none';
+            }
             
             // Highlight matching files after loading
             highlightMatchingFiles();
@@ -698,28 +742,36 @@
             
             allVersionItems.forEach(item => {
                 const filename = item.querySelector('.version-file').textContent.toLowerCase();
-                let isMatch = false;
+                let isPerfectMatch = false;
                 
-                // Check KSU variant match
-                if (ksuVariant === 'non-ksu' && filename.includes('nonksu')) {
-                    isMatch = true;
-                } else if (ksuVariant === 'next' && filename.includes('next')) {
-                    isMatch = true;
-                } else if (ksuVariant === 'susfs' && filename.includes('susfs')) {
-                    isMatch = true;
-                } else if (ksuVariant === 'ksu' && filename.includes('ksu') && !filename.includes('nonksu')) {
-                    isMatch = true;
-                }
-                
-                // Check ROM type match
+                // Check for perfect match with current configuration
                 if (dtboCode === 'hos-a16' && filename.includes('bpf')) {
-                    isMatch = true;
+                    isPerfectMatch = true;
                 } else if (dtboCode === 'oplus' && filename.includes('oplus')) {
-                    isMatch = true;
+                    isPerfectMatch = true;
+                } else if ((dtboCode === 'aosp' || dtboCode === 'miui') && 
+                          !filename.includes('bpf') && !filename.includes('oplus')) {
+                    // For AOSP/MIUI, files without BPF or OPLUS are perfect matches
+                    isPerfectMatch = true;
                 }
                 
-                // Highlight matching files
-                if (isMatch) {
+                // Also check KSU variant match
+                if (isPerfectMatch) {
+                    if (ksuVariant === 'non-ksu' && filename.includes('nonksu')) {
+                        isPerfectMatch = true;
+                    } else if (ksuVariant === 'next' && filename.includes('next')) {
+                        isPerfectMatch = true;
+                    } else if (ksuVariant === 'susfs' && filename.includes('susfs')) {
+                        isPerfectMatch = true;
+                    } else if (ksuVariant === 'ksu' && filename.includes('ksu') && !filename.includes('nonksu')) {
+                        isPerfectMatch = true;
+                    } else {
+                        isPerfectMatch = false;
+                    }
+                }
+                
+                // Highlight perfect matches
+                if (isPerfectMatch) {
                     item.style.borderColor = '#4ade80';
                     item.style.background = '#1a3a1a';
                 } else {
